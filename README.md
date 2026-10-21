@@ -1,21 +1,34 @@
-<<<<<<< HEAD
-# React + Vite
+# LOCKR
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+LOCKR is a Fortnite cosmetics collection tracker built with React and Vite. The catalogue and local locker work without an account. Supabase adds accounts, cloud-synced lockers, public profiles, and collection leaderboards.
 
-Currently, two official plugins are available:
+## Run locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```sh
+npm install
+npm run dev
+```
 
-## React Compiler
+## Enable accounts and shared leaderboards
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Create a Supabase project.
+2. In the Supabase SQL Editor, run [`supabase/migrations/20261020200000_lockr_accounts_and_lockers.sql`](./supabase/migrations/20261020200000_lockr_accounts_and_lockers.sql).
+3. Create `.env.local` beside `package.json`:
 
-## Expanding the ESLint configuration
+   ```env
+   VITE_SUPABASE_URL=https://YOUR-PROJECT.supabase.co
+   VITE_SUPABASE_PUBLISHABLE_KEY=YOUR_PUBLIC_PUBLISHABLE_KEY
+   ```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-=======
-# LOCKR.
-Fortnite Cosmetics Tracker
->>>>>>> 6ef7d4697bdaa5fab6002d21b1616aad4e99d20b
+4. Restart the Vite development server after changing environment variables.
+5. In Supabase Auth settings, allow your local URL (`http://localhost:5173`) and your deployed site URL for sign-in redirects.
+
+Only use the Supabase URL and publishable (browser-safe) key in `VITE_` variables. Never put a `service_role` key or another secret in frontend code or environment variables prefixed with `VITE_`.
+
+For Vercel, add `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` to the project's environment variables, then redeploy.
+
+## Data and score
+
+Profiles and locker item IDs are publicly readable to power the community leaderboard. Each user can only create or update their own locker, enforced by Supabase row-level security. Collections are entered manually and are not verified against Epic accounts. Never enter Epic Games credentials or tokens in LOCKR.
+
+The LOCKR score is an indicative community metric based on cosmetic rarity and series, not a resale price or an official Epic Games valuation.
